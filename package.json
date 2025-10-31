@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "deploy-pages": "ng build --output-path docs --base-href /munchkin-helper/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

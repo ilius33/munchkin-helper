@@ -42,6 +42,9 @@ export class PlayersList implements OnInit {
   private playersDataService = inject(PlayersDataService);
   protected readonly Sex = Sex;
 
+
+  //TODO: refactor all to models and use service to keep players in localStorage
+
   // players = signal<Player[]>([]);
 
   // addPlayer(): void {
