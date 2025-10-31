@@ -1,0 +1,142 @@
+<div class="player-list-container">
+  <mat-card>
+    <mat-card-content>
+      <!-- Edit Form -->
+      @if (isEditing && editingIndex !== null) {
+      <div class="edit-form-container">
+        <h3>Edit Player: {{players[editingIndex!].name}}</h3>
+        <form [formGroup]="editForm" class="edit-form">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Player Name</mat-label>
+              <input matInput formControlName="name" placeholder="Enter player name">
+              @if(editForm.get('name')?.hasError('required')) {
+              <mat-error>Name is required</mat-error>
+              }
+              @if(editForm.get('name')?.hasError('minlength')) {
+              <mat-error>Name must be at least 2 characters</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Gender</mat-label>
+              <mat-select formControlName="sex">
+                @for (sex of Sex | keyvalue; track sex.key) {
+                <mat-option [value]="sex.value">
+                  <mat-icon>{{sex.value}}</mat-icon>
+                  {{sex.value}}
+                </mat-option>
+                }
+              </mat-select>
+              @if(editForm.get('sex')?.hasError('required')){
+              <mat-error>Gender is required</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="form-actions">
+            <button mat-raised-button color="warn" type="button" (click)="cancelEdit()">
+              <mat-icon>cancel</mat-icon>
+              Cancel
+            </button>
+            <button mat-raised-button color="primary" type="button" (click)="saveEdit()" [disabled]="!editForm.valid">
+              <mat-icon>save</mat-icon>
+              Save Changes
+            </button>
+          </div>
+        </form>
+        <mat-divider></mat-divider>
+      </div>
+      }
+
+      <!-- Players Table -->
+      <div class="table-container">
+        <div class="table-header">
+          <button matMiniFab (click)="addNewPlayer()">
+            <mat-icon>person_add</mat-icon>
+          </button>
+        </div>
+
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef></th>
+            <td mat-cell *matCellDef="let player; let i = index">
+              <div class="player-name">
+                <mat-icon [class]="'sex-icon ' + player.sex?.toLowerCase()">
+                  {{player.sex}}
+                </mat-icon>
+                {{player.name}}
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Level Column -->
+          <ng-container matColumnDef="level">
+            <th mat-header-cell *matHeaderCellDef>LVL</th>
+            <td mat-cell *matCellDef="let player; let i = index">
+              <div class="level-controls">
+                <button mat-icon-button color="primary" (click)="increaseLevel(player, i)">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <span class="level-badge" [class.high-level]="player.level >= 10">
+                  {{player.level}}
+                </span>
+                <button mat-icon-button color="warn" (click)="decreaseLevel(player, i)" [disabled]="player.level <= 1">
+                  <mat-icon>remove</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Inventory Strength Column -->
+          <ng-container matColumnDef="inventoryStrength">
+            <th mat-header-cell *matHeaderCellDef>INV</th>
+            <td mat-cell *matCellDef="let player; let i = index">
+              <div class="inventory-controls">
+                <button mat-icon-button color="primary" (click)="increaseInventory(player, i)">
+                  <mat-icon>add</mat-icon>
+                </button>
+                <span class="inventory-value" [class.high-inventory]="player.inventoryStrength >= 150">
+                  {{player.inventoryStrength}}
+                </span>
+                <button mat-icon-button color="warn" (click)="decreaseInventory(player, i)"
+                  [disabled]="player.inventoryStrength < 10">
+                  <mat-icon>remove</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Actions</th>
+            <td mat-cell *matCellDef="let player; let i = index">
+              <div class="action-buttons">
+                <button mat-icon-button color="primary" (click)="startEdit(player, i)" [disabled]="isEditing">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-icon-button color="warn" (click)="deletePlayer(i)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+        <!-- Empty State -->
+        @if(players.length === 0){
+        <div class="empty-state">
+          <mat-icon>people_outline</mat-icon>
+          <h3>No Players Found</h3>
+          <p>Click the "Add New Player" button to create your first player.</p>
+        </div>
+        }
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
