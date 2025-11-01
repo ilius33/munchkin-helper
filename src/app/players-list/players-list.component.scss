@@ -108,7 +108,7 @@
 
                 .level-badge,
                 .inventory-value {
-                    padding: 4px;
+                    padding: 5px 4px 4px 4px;
                     background-color: #f0f0f0;
                     border-radius: 16px;
                     font-weight: 600;
@@ -116,12 +116,12 @@
                     text-align: center;
 
                     &.high-level {
-                        background-color: #4caf50;
+                        background-color: #f14c4c;
                         color: white;
                     }
 
-                    &.high-inventory {
-                        background-color: #ff9800;
+                    &.max-level {
+                        background-color: #4caf50;
                         color: white;
                     }
                 }
@@ -161,7 +161,7 @@
         padding: 8px;
 
         .table-container .table-header {
-            flex-direction: column;
+            flex-direction: row;
             gap: 16px;
             align-items: stretch;
 

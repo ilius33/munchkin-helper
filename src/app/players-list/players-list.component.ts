@@ -41,6 +41,7 @@ import { MatInputModule } from '@angular/material/input';
 export class PlayersList implements OnInit {
   private playersDataService = inject(PlayersDataService);
   protected readonly Sex = Sex;
+  protected readonly MAX_LEVEL = 10;
 
 
   //TODO: refactor all to models and use service to keep players in localStorage
@@ -56,7 +57,7 @@ export class PlayersList implements OnInit {
 
   players: Player[] = [];
 
-  displayedColumns: string[] = ['name', 'level', 'inventoryStrength', 'actions'];
+  displayedColumns: string[] = ['name', 'level', 'inventoryStrength', 'totalStrength', 'actions'];
   dataSource = this.players;
 
   editForm: FormGroup;
@@ -87,13 +88,13 @@ export class PlayersList implements OnInit {
   }
 
   increaseInventory(player: Player, index: number): void {
-    player.inventoryStrength += 10;
+    player.inventoryStrength += 1;
     this.updatePlayer(index, player);
   }
 
   decreaseInventory(player: Player, index: number): void {
-    if (player.inventoryStrength >= 10) {
-      player.inventoryStrength -= 10;
+    if (player.inventoryStrength >= 1) {
+      player.inventoryStrength -= 1;
       this.updatePlayer(index, player);
     }
   }
@@ -130,12 +131,16 @@ export class PlayersList implements OnInit {
       name: 'New Player',
       sex: Sex.Agender,
       level: 1,
-      inventoryStrength: 50
+      inventoryStrength: 0,
     };
 
     this.players.push(newPlayer);
     this.updateDataSource();
     this.startEdit(newPlayer, this.players.length - 1);
+  }
+
+  openFightCalculator(): void {
+    //TODO: TBD
   }
 
   deletePlayer(index: number): void {

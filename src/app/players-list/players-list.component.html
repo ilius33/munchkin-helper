@@ -4,7 +4,7 @@
       <!-- Edit Form -->
       @if (isEditing && editingIndex !== null) {
       <div class="edit-form-container">
-        <h3>Edit Player: {{players[editingIndex!].name}}</h3>
+        <h3>Edit Player: {{ players[editingIndex!].name }}</h3>
         <form [formGroup]="editForm" class="edit-form">
           <div class="form-row">
             <mat-form-field appearance="outline" class="form-field">
@@ -23,8 +23,8 @@
               <mat-select formControlName="sex">
                 @for (sex of Sex | keyvalue; track sex.key) {
                 <mat-option [value]="sex.value">
-                  <mat-icon>{{sex.value}}</mat-icon>
-                  {{sex.value}}
+                  <mat-icon>{{ sex.value }}</mat-icon>
+                  {{ sex.value }}
                 </mat-option>
                 }
               </mat-select>
@@ -55,6 +55,9 @@
           <button matMiniFab (click)="addNewPlayer()">
             <mat-icon>person_add</mat-icon>
           </button>
+          <button matMiniFab (click)="openFightCalculator()">
+            <mat-icon>swords</mat-icon>
+          </button>
         </div>
 
         <table mat-table [dataSource]="dataSource" class="mat-elevation-z1">
@@ -65,9 +68,9 @@
             <td mat-cell *matCellDef="let player; let i = index">
               <div class="player-name">
                 <mat-icon [class]="'sex-icon ' + player.sex?.toLowerCase()">
-                  {{player.sex}}
+                  {{ player.sex }}
                 </mat-icon>
-                {{player.name}}
+                {{ player.name }}
               </div>
             </td>
           </ng-container>
@@ -80,8 +83,9 @@
                 <button mat-icon-button color="primary" (click)="increaseLevel(player, i)">
                   <mat-icon>add</mat-icon>
                 </button>
-                <span class="level-badge" [class.high-level]="player.level >= 10">
-                  {{player.level}}
+                <span class="level-badge" [class.high-level]="player.level === MAX_LEVEL-1"
+                  [class.max-level]="player.level >= MAX_LEVEL">
+                  {{ player.level }}
                 </span>
                 <button mat-icon-button color="warn" (click)="decreaseLevel(player, i)" [disabled]="player.level <= 1">
                   <mat-icon>remove</mat-icon>
@@ -98,13 +102,25 @@
                 <button mat-icon-button color="primary" (click)="increaseInventory(player, i)">
                   <mat-icon>add</mat-icon>
                 </button>
-                <span class="inventory-value" [class.high-inventory]="player.inventoryStrength >= 150">
-                  {{player.inventoryStrength}}
+                <span class="inventory-value">
+                  {{ player.inventoryStrength }}
                 </span>
                 <button mat-icon-button color="warn" (click)="decreaseInventory(player, i)"
                   [disabled]="player.inventoryStrength < 10">
                   <mat-icon>remove</mat-icon>
                 </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Total Strength Column -->
+          <ng-container matColumnDef="totalStrength">
+            <th mat-header-cell *matHeaderCellDef>SUM</th>
+            <td mat-cell *matCellDef="let player; let i = index">
+              <div class="inventory-controls">
+                <span class="inventory-value">
+                  {{ player.level + player.inventoryStrength }}
+                </span>
               </div>
             </td>
           </ng-container>
